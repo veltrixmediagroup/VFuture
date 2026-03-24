@@ -156,138 +156,138 @@ export function DatePickerInput({
 
       {open && mounted
         ? createPortal(
-            <div
-              ref={panelRef}
-              className="fixed z-[9999] pointer-events-auto rounded-[20px] border border-border bg-card p-4 shadow-[0_18px_38px_rgba(15,23,42,0.14)] dark:shadow-[0_24px_52px_rgba(0,0,0,0.34)]"
-              style={panelStyle}
-            >
-              <div className="mb-4 space-y-3">
-                <div className="flex items-center justify-between gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setCursorDate((current) => subMonths(current, 1))}
-                    className="theme-control-surface inline-flex size-9 items-center justify-center rounded-xl"
-                    aria-label="THÁNG TRƯỚC"
+          <div
+            ref={panelRef}
+            className="fixed z-[9999] pointer-events-auto rounded-[20px] border border-border bg-card p-4 shadow-[0_18px_38px_rgba(15,23,42,0.14)] dark:shadow-[0_24px_52px_rgba(0,0,0,0.34)]"
+            style={panelStyle}
+          >
+            <div className="mb-4 space-y-3">
+              <div className="flex items-center justify-between gap-2">
+                <button
+                  type="button"
+                  onClick={() => setCursorDate((current) => subMonths(current, 1))}
+                  className="theme-control-surface inline-flex size-9 items-center justify-center rounded-xl"
+                  aria-label="THÁNG TRƯỚC"
+                >
+                  <ChevronLeft className="size-4" />
+                </button>
+
+                <div className="grid flex-1 grid-cols-2 gap-2">
+                  <select
+                    value={cursorDate.getMonth()}
+                    onChange={(event) => {
+                      const nextMonth = Number(event.target.value);
+                      setCursorDate(new Date(cursorDate.getFullYear(), nextMonth, 1));
+                    }}
+                    className="theme-control-surface h-10 rounded-xl px-3 text-sm font-semibold uppercase tracking-[0.08em] text-foreground"
                   >
-                    <ChevronLeft className="size-4" />
-                  </button>
+                    {monthLabels.map((label, index) => (
+                      <option key={label} value={index}>
+                        {label}
+                      </option>
+                    ))}
+                  </select>
 
-                  <div className="grid flex-1 grid-cols-2 gap-2">
-                    <select
-                      value={cursorDate.getMonth()}
-                      onChange={(event) => {
-                        const nextMonth = Number(event.target.value);
-                        setCursorDate(new Date(cursorDate.getFullYear(), nextMonth, 1));
-                      }}
-                      className="theme-control-surface h-10 rounded-xl px-3 text-sm font-semibold uppercase tracking-[0.08em] text-foreground"
-                    >
-                      {monthLabels.map((label, index) => (
-                        <option key={label} value={index}>
-                          {label}
-                        </option>
-                      ))}
-                    </select>
-
-                    <select
-                      value={cursorDate.getFullYear()}
-                      onChange={(event) => {
-                        const nextYear = Number(event.target.value);
-                        setCursorDate(new Date(nextYear, cursorDate.getMonth(), 1));
-                      }}
-                      className="theme-control-surface h-10 rounded-xl px-3 text-sm font-semibold uppercase tracking-[0.08em] text-foreground"
-                    >
-                      {yearOptions.map((year) => (
-                        <option key={year} value={year}>
-                          {year}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => setCursorDate((current) => addMonths(current, 1))}
-                    className="theme-control-surface inline-flex size-9 items-center justify-center rounded-xl"
-                    aria-label="THÁNG SAU"
+                  <select
+                    value={cursorDate.getFullYear()}
+                    onChange={(event) => {
+                      const nextYear = Number(event.target.value);
+                      setCursorDate(new Date(nextYear, cursorDate.getMonth(), 1));
+                    }}
+                    className="theme-control-surface h-10 rounded-xl px-3 text-sm font-semibold uppercase tracking-[0.08em] text-foreground"
                   >
-                    <ChevronRight className="size-4" />
-                  </button>
+                    {yearOptions.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
-                <p className="text-center text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                  {format(cursorDate, "MMMM yyyy", { locale: vi })}
-                </p>
+                <button
+                  type="button"
+                  onClick={() => setCursorDate((current) => addMonths(current, 1))}
+                  className="theme-control-surface inline-flex size-9 items-center justify-center rounded-xl"
+                  aria-label="THÁNG SAU"
+                >
+                  <ChevronRight className="size-4" />
+                </button>
               </div>
 
-              <div className="mb-2 grid grid-cols-7 gap-1">
-                {weekdayLabels.map((label) => (
-                  <span
-                    key={label}
-                    className="flex h-8 items-center justify-center text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground"
+              <p className="text-center text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                {format(cursorDate, "MMMM yyyy", { locale: vi })}
+              </p>
+            </div>
+
+            <div className="mb-2 grid grid-cols-7 gap-1">
+              {weekdayLabels.map((label) => (
+                <span
+                  key={label}
+                  className="flex h-8 items-center justify-center text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground"
+                >
+                  {label}
+                </span>
+              ))}
+            </div>
+
+            <div className="grid max-h-64 grid-cols-7 gap-1 overflow-y-auto">
+              {monthDays.map((day) => {
+                const dayKey = format(day, "yyyy-MM-dd");
+                const isSelected = selectedDate ? isSameDay(day, selectedDate) : false;
+                const isCurrentMonth = isSameMonth(day, cursorDate);
+                const isToday = isSameDay(day, new Date());
+
+                return (
+                  <button
+                    key={dayKey}
+                    type="button"
+                    onClick={() => {
+                      onChange(dayKey);
+                      setOpen(false);
+                    }}
+                    className={cn(
+                      "flex h-10 items-center justify-center rounded-xl text-sm font-semibold transition",
+                      isSelected
+                        ? "bg-primary text-primary-foreground shadow-[0_10px_22px_rgba(0,82,255,0.2)] dark:shadow-[0_0_20px_-8px_rgba(247,147,26,0.55)]"
+                        : "text-foreground hover:bg-primary/10 hover:text-primary dark:hover:text-amber-300",
+                      !isCurrentMonth && "text-muted-foreground/45",
+                      isToday && !isSelected && "border border-primary/25 bg-primary/5",
+                    )}
                   >
-                    {label}
-                  </span>
-                ))}
-              </div>
+                    {format(day, "dd")}
+                  </button>
+                );
+              })}
+            </div>
 
-              <div className="grid grid-cols-7 gap-1">
-                {monthDays.map((day) => {
-                  const dayKey = format(day, "yyyy-MM-dd");
-                  const isSelected = selectedDate ? isSameDay(day, selectedDate) : false;
-                  const isCurrentMonth = isSameMonth(day, cursorDate);
-                  const isToday = isSameDay(day, new Date());
+            <div className="mt-4 flex items-center justify-between gap-2 border-t border-border/70 pt-3">
+              <button
+                type="button"
+                onClick={() => {
+                  onChange("");
+                  setOpen(false);
+                }}
+                className="inline-flex h-9 items-center justify-center rounded-xl border border-border px-3 text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground transition hover:border-primary/30 hover:text-primary"
+              >
+                XÓA NGÀY
+              </button>
 
-                  return (
-                    <button
-                      key={dayKey}
-                      type="button"
-                      onClick={() => {
-                        onChange(dayKey);
-                        setOpen(false);
-                      }}
-                      className={cn(
-                        "flex h-10 items-center justify-center rounded-xl text-sm font-semibold transition",
-                        isSelected
-                          ? "bg-primary text-primary-foreground shadow-[0_10px_22px_rgba(0,82,255,0.2)] dark:shadow-[0_0_20px_-8px_rgba(247,147,26,0.55)]"
-                          : "text-foreground hover:bg-primary/10 hover:text-primary dark:hover:text-amber-300",
-                        !isCurrentMonth && "text-muted-foreground/45",
-                        isToday && !isSelected && "border border-primary/25 bg-primary/5",
-                      )}
-                    >
-                      {format(day, "dd")}
-                    </button>
-                  );
-                })}
-              </div>
-
-              <div className="mt-4 flex items-center justify-between gap-2 border-t border-border/70 pt-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    onChange("");
-                    setOpen(false);
-                  }}
-                  className="inline-flex h-9 items-center justify-center rounded-xl border border-border px-3 text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground transition hover:border-primary/30 hover:text-primary"
-                >
-                  XÓA NGÀY
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    const today = new Date();
-                    onChange(format(today, "yyyy-MM-dd"));
-                    setCursorDate(today);
-                    setOpen(false);
-                  }}
-                  className="inline-flex h-9 items-center justify-center rounded-xl bg-primary px-3 text-xs font-semibold uppercase tracking-[0.08em] text-primary-foreground shadow-[0_10px_22px_rgba(0,82,255,0.2)] transition hover:brightness-110 dark:shadow-[0_0_20px_-8px_rgba(247,147,26,0.55)]"
-                >
-                  HÔM NAY
-                </button>
-              </div>
-            </div>,
-            document.body,
-          )
+              <button
+                type="button"
+                onClick={() => {
+                  const today = new Date();
+                  onChange(format(today, "yyyy-MM-dd"));
+                  setCursorDate(today);
+                  setOpen(false);
+                }}
+                className="inline-flex h-9 items-center justify-center rounded-xl bg-primary px-3 text-xs font-semibold uppercase tracking-[0.08em] text-primary-foreground shadow-[0_10px_22px_rgba(0,82,255,0.2)] transition hover:brightness-110 dark:shadow-[0_0_20px_-8px_rgba(247,147,26,0.55)]"
+              >
+                HÔM NAY
+              </button>
+            </div>
+          </div>,
+          document.body,
+        )
         : null}
     </div>
   );

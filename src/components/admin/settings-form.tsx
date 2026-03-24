@@ -42,10 +42,6 @@ const settingsMeta: Record<string, { label: string; description: string }> = {
     label: "TIÊU ĐỀ SEO MẶC ĐỊNH",
     description: "TIÊU ĐỀ MẶC ĐỊNH DÙNG CHO SEO KHI CHƯA CẤU HÌNH RIÊNG CHO TỪNG TRANG.",
   },
-  "site.experimental_mode": {
-    label: "CHẾ ĐỘ THỬ NGHIỆM",
-    description: "NHẬP TRUE ĐỂ BẬT THÔNG BÁO THỬ NGHIỆM, FALSE ĐỂ TẮT.",
-  },
   "social.facebook_url": {
     label: "LINK FACEBOOK",
     description: "LIÊN KẾT FACEBOOK SẼ ĐỒNG BỘ Ở FOOTER, LIÊN HỆ VÀ SEO.",
@@ -77,7 +73,6 @@ const settingsFieldOrder = [
   "home.background.interval_seconds",
   "home.background.transition_seconds",
   "seo.default_title",
-  "site.experimental_mode",
   "social.facebook_url",
   "social.tiktok_url",
   "social.youtube_url",
@@ -193,7 +188,7 @@ export function SettingsForm({ settings, onSaved }: SettingsFormProps) {
                   </div>
                 ))}
               </div>
-            ) : key === "home.background.transition_effect" || key === "site.experimental_mode" ? (
+            ) : key === "home.background.transition_effect" ? (
               <Select
                 value={value}
                 onValueChange={(nextValue) =>
@@ -213,15 +208,15 @@ export function SettingsForm({ settings, onSaved }: SettingsFormProps) {
                 <SelectContent className="border-border bg-card text-foreground">
                   {key === "home.background.transition_effect"
                     ? sliderEffectOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))
                     : ["true", "false"].map((option) => (
-                        <SelectItem key={option} value={option}>
-                          {option === "true" ? "BẬT" : "TẮT"}
-                        </SelectItem>
-                      ))}
+                      <SelectItem key={option} value={option}>
+                        {option === "true" ? "BẬT" : "TẮT"}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             ) : (

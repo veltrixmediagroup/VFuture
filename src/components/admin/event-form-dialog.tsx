@@ -117,7 +117,8 @@ export function EventFormDialog({
         description: "",
         start_date: toVietnamIsoFromDateInput(values.start_date),
         end_date: toVietnamIsoFromDateInput(values.end_date),
-        thumbnail_url: values.image_url,
+        thumbnail_url: values.thumbnail_url || values.image_url,
+        link: values.link || "",
       }),
     });
 
